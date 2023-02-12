@@ -1,0 +1,402 @@
+\documentclass{exam}
+
+\usepackage{colortbl}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\footskip}{0.5in}
+
+\def\COURSENAME{Cryptography}
+\def\COURSECODE{CSCI/MATH 388}
+\def\YEAR{2023}
+
+\definecolor{lightgreen}{cmyk}{.25,0,.25,0}
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{dgray}{rgb}{0.1,0.1,0.1}
+\definecolor{lgray}{rgb}{0.5,0.5,0.5}
+\definecolor{dblue}{rgb}{.2,.4,.6}
+\definecolor{lblue}{rgb}{.2,0,.7}
+\definecolor{llblue}{rgb}{.2,0,.6}
+\definecolor{gold}{rgb}{0.8512,0.6042,0.0000}
+\definecolor{dred}{rgb}{0.9,0,0}
+\definecolor{lred}{rgb}{1.0000,0.2013,0.1405}
+\definecolor{orange}{rgb}{1,0.3,0}
+\definecolor{dgreen}{rgb}{.01,.6,.06}
+\definecolor{lgreen}{rgb}{0.2610,0.8730,0.2875}
+\definecolor{peachpuff}{rgb}{1.0000,0.7197,0.5181}
+\definecolor{cornflowerblue}{rgb}{0.0859,0.2912,0.8708}
+\definecolor{deepskyblue}{rgb}{0.0000,0.5227,1.0000}
+\definecolor{lightskyblue}{rgb}{0.1946,0.6324,1.0000}
+\definecolor{darkturquoise}{rgb}{0.0000,0.6324,0.6861}
+\definecolor{darkseagreen}{rgb}{0.2264,0.5227,0.2498}
+\definecolor{lemon}{rgb}{0.8512,0.8416,0.5181}
+\definecolor{dred}{rgb}{0.9,0,0}
+
+
+\newcommand{\T}{\mathbf{T}}
+\newcommand{\F}{\mathbf{F}}
+\newcommand{\Q}{\mathbf{Q}}
+
+
+\newcommand{\bheading}[1]{\vspace{10pt} \noindent \textbf{#1}}
+
+\newenvironment{problemstmt}[1]{\begin{rm}
+  \vspace{.3in}
+  \noindent \textbf{Problem #1.}}
+  {\end{rm}
+  \vspace{.3in}
+  \hrule}
+
+\def\nextt{\:;\:}
+\def\gets{\;\leftarrow\;}
+\def\getsr{\stackrel{{\scriptscriptstyle \$}}{\leftarrow}}
+\newcommand{\Colon}{\;:\;}
+\newcommand{\Prob}[1]{\Pr\left[\: #1 \:\right]}
+\newcommand{\ProbExp}[2]{\Pr\left[\: #1 \: : \: #2\: \right]}
+\newcommand{\Probb}[2]{{\Pr}_{#1}\left[\: #2 \:\right]}
+\newcommand{\Probc}[2]{\Pr\left[\: #1 \:{\left|\right.}\:#2\:\right]}
+\newcommand{\Probcc}[3]{{\Pr}_{#1}\left[\: #2 \:\left|\right.\:#3\:\right]}
+\newcommand{\CondProb}[2]{{\Pr}\left[\: #1\:\left|\right.\:#2\:\right]}
+\newcommand{\suchthat}{{\mbox{s.t.\ }}}
+\newcommand{\Exp}{\mathbf{Exp}}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\advA}{A}
+\newcommand{\ExpH}[3]{\Exp^{\mathrm{cr#1}\mbox{-}\mathrm{kk}}_{#2}(#3)}
+\newcommand{\AdvH}[3]{\Adv^{\mathrm{cr#1}\mbox{-}\mathrm{kk}}_{#2}(#3)}
+\newcommand{\AdvHz}[2]{\Adv^{\mathrm{cr0}}_{#1}(#2)}
+\newcommand{\DS}{\mathcal{DS}}
+\newcommand{\MA}{\mathcal{MA}}
+\newcommand{\Enc}{\mathcal{E}}
+\newcommand{\Dec}{\mathcal{D}}
+\newcommand{\Sign}{\mathrm{Sign}}
+\newcommand{\KG}{\mathsf{KG}}
+\newcommand{\mac}{\mathcal{MAC}}
+\newcommand{\verify}{\mathcal{VF}}
+\newcommand{\ctr}{ctr}
+\newcommand{\xor}{\oplus}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\SE}{\mathcal{SE}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\MAC}{\mathsf{Tag}}
+\newcommand{\VF}{\mathsf{VF}}
+\newcommand{\lxlcpa}{\mathrm{lxl}\mbox{-}\mathrm{cpa}}
+\newcommand{\pad}{\mathsf{pad}}
+\newcommand{\IV}{{IV}}
+
+\newcommand{\op}{op}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\true}{\mathbf{T}}
+\newcommand{\false}{\mathbf{F}}
+\newcommand{\ATM}{\mathsf{A_{TM}}}
+\newcommand{\HangTM}{\mathsf{Hang_{TM}}}
+\newcommand{\BTTM}{\mathsf{BlankTape_{TM}}}
+\newcommand{\ASTM}{\mathsf{AcceptsSome_{TM}}}
+\newcommand{\AATM}{\mathsf{AcceptsAll_{TM}}}
+\newcommand{\LDFA}{\mathsf{L_{DFA}}}
+\newcommand{\LCFG}{\mathsf{L_{CFG}}}
+\newcommand{\ADFA}{\mathsf{A_{DFA}}}
+\newcommand{\ANFA}{\mathsf{A_{NFA}}}
+\newcommand{\AREX}{\mathsf{A_{REX}}}
+\newcommand{\EDFA}{\mathsf{E_{DFA}}}
+\newcommand{\EQDFA}{\mathsf{EQ_{DFA}}}
+\newcommand{\EMPTYREG}{\mathsf{EMPTYREG}}
+\newcommand{\ACFG}{\mathsf{A_{CFG}}}
+\newcommand{\ECFG}{\mathsf{E_{CFG}}}
+\newcommand{\EQCFG}{\mathsf{EQ_{CFG}}}
+\newcommand{\HTM}{\mathsf{Halt_{TM}}}
+\newcommand{\HALT}{\HTM}
+\newcommand{\HALTSOME}{\mathsf{HaltSome_{TM}}}
+\newcommand{\HALTALL}{\mathsf{HaltAll_{TM}}}
+\newcommand{\ETM}{\mathsf{E_{TM}}}
+\newcommand{\REGTM}{\mathsf{Regular_{TM}}}
+\newcommand{\EQTM}{\mathsf{EQ_{TM}}}
+\newcommand{\ALLCFG}{\mathsf{All_{CFG}}}
+\newcommand{\ALLDFA}{\mathsf{All_{DFA}}}
+\newcommand{\HAMPATH}{\mathsf{HAMPATH}}
+\newcommand{\SAT}{\mathsf{SAT}}
+\newcommand{\WSAT}{\mathsf{2SAT}}
+\newcommand{\TSAT}{\mathsf{3SAT}}
+\newcommand{\exptime}{\mathsf{EXPTIME}}
+\newcommand{\dtime}[1]{\mathsf{TIME}(#1)}
+\newcommand{\ntime}[1]{\mathsf{NTIME}(#1)}
+\newcommand{\DP}{\mathbf{P}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\coNP}{\mathbf{coNP}}
+\newcommand{\IS}{\mathsf{IS}}
+\newcommand{\ConsE}{\mathsf{Cons}_E}
+
+\newcommand{\hash}{\mathsf{H}}
+\newcommand{\tostr}[1]{\langle #1 \rangle}
+%\newcommand{\tonum}[1]{\llbracket #1 \rrbracket}
+\newcommand{\tonum}[1]{[\![ #1 ]\!]}
+
+\newcommand{\INDCPA}{\mathsf{IND}\mbox{-}\mathsf{CPA}}
+\newcommand{\INDCCA}{\mathsf{IND}\mbox{-}\mathsf{CCA}}
+\newcommand{\WUFCMA}{\mathsf{WUF}\mbox{-}\mathsf{CMA}}
+\newcommand{\SUFCMA}{\mathsf{SUF}\mbox{-}\mathsf{CMA}}
+\newcommand{\PRF}{\mathsf{PRF}}
+\newcommand{\PRPCPA}{\mathsf{PRP}\mbox{-}\mathsf{CPA}}
+\newcommand{\PRPCCA}{\mathsf{PRP}\mbox{-}\mathsf{CCA}}
+\newcommand{\Coll}{\mathsf{Coll}}
+\newcommand{\padwithzeros}{\mathsf{padwithzeros}}
+
+\newcommand{\subroutinefont}[1]{\texttt{#1}}
+\newcommand{\ExpHcoll}[2]{\Exp^{\mathrm{coll}}_{#1}(#2)}
+\newcommand{\AdvHcoll}[2]{\Adv^{\mathrm{coll}}_{#1}(#2)}
+\newcommand{\Initialize}{\subroutinefont{Initialize}}
+\newcommand{\Finalize}{\subroutinefont{Finalize}}
+
+\newcommand{\DES}{\mathsf{DES}}
+\newcommand{\AES}{\mathsf{AES}}
+\newcommand{\DESX}{\mathsf{DESX}}
+\newcommand{\ECB}{\mathsf{ECB}}
+\newcommand{\CBC}{\mathsf{CBC}}
+\newcommand{\CTR}{\mathsf{CTR}}
+\newcommand{\CTRC}{\mathsf{CTRC}}
+
+
+\newcommand{\pk}{\mathsf{pk}}
+\newcommand{\sk}{\mathsf{sk}}
+
+\def\getsr{\stackrel{{\scriptscriptstyle \$}}{\leftarrow}}
+
+
+\newcommand{\tableminipage}{\begin{minipage}{0.5in}
+\begin{tabular}{|l|l|} \hline
+  \textbf{output} & \hspace{4.5in} \\ \hline
+\end{tabular}
+\end{minipage}}
+
+
+\begin{document}
+
+
+\begin{tabbing}
+  \`\=\kill
+  \textbf{\COURSECODE:} \COURSENAME \` Spring \YEAR \\
+  Department of Computer Science \` Reed College \\
+  \textbf{Problem Set 1:}\` \textbf{Instructor:} Chanathip Namprempre
+\end{tabbing}
+
+
+\hrule
+
+\vspace{.4in}
+
+\begin{center}
+\textbf{\Large Problem Set 1}
+\end{center}
+
+
+\vspace{.2in}
+
+
+\begin{questions}
+
+  \question Let $E \Colon \bits^2 \times \bits^3 \rightarrow \bits^3$ be the following family of maps:
+  \begin{center}
+    \begin{small}
+      \begin{tabular}{lllll}
+        $E_{00}$ & = (001, 011, 010, 000, 110, 111, 101, 100) &&
+        $E_{01}$ & = (001, 011, 010, 000, 110, 111, 101, 100) \\
+        $E_{10}$ & = (001, 011, 010, 000, 110, 111, 101, 100) &&
+        $E_{11}$ & = (001, 011, 010, 000, 110, 111, 101, 100)
+      \end{tabular}
+    \end{small}%
+  \end{center}
+  \noindent Is $E$ a block cipher? Explain \underline{your answer}. Be specific and suitably detailed.
+
+  $E$ is a block cipher because for every key $K$, it is a valid permutation of the input. Therefore, for every messsage m in the message space $\{0,1\}^n$, $E_k(E_k^{-1}(m)) = m$ and $E_k^{-1}(E_k(m)) = m$. Although it isn't secure, it's syntactically a block cipher.
+  \bigskip
+
+  \question Let $E \Colon \bits^3 \times \bits^3 \rightarrow \bits^3$ be the following family of maps:
+  \begin{center}
+    \begin{small}
+      \begin{tabular}{lllll}
+        $E_{000}$ & = (011, 001, 000, 010, 101, 110, 100, 111)  &&
+        $E_{001}$ & = (000, 001, 010, 011, 100, 101, 110, 111) \\
+        $E_{100}$ & = (001, 010, 110, 101, 000, 100, 111, 011)  &&
+        $E_{010}$ & = (011, 001, 010, 000, 111, 110, 100, 101)
+      \end{tabular}
+    \end{small}%
+  \end{center}
+  \noindent Is $E$ a block cipher? Explain \underline{your answer}. Be specific and suitably detailed.
+
+  This $E$ is also a block cipher. Each key corresponds to a valid permutation, so a message can be recovered for any key message encrypted with $E$ and key $k$ by $E^{-1}$ and the same $k$.
+
+  \bigskip
+
+  \question Let $E \Colon \bits^3 \times \bits^3 \rightarrow \bits^3$ be the following family of maps:
+  \begin{center}
+    \begin{small}
+      \begin{tabular}{lllllllll}
+        $E_{000} = E_{101} = E_{010} = $& (011,& 100, & 010, & 000, & 110, & 111, & 001, & 101) \\
+        $E_{011} = E_{111} = E_{100} = $& (001,& 110, & 011, & 000, & 100, & 111, & 010, & 101) \\
+        $E_{110} = $& (010,& 011, & 100, & 111, & 001, & 110, & 101, & 000) \\
+        $E_{001} = $& (001,& 000, & 100, & 111, & 011, & 101, & 110, & 010)
+      \end{tabular}
+    \end{small}%
+  \end{center}
+
+  \begin{parts}
+    \part Let $K = 111$ and $M = 110$. What is the value of the output $E_K(M)$?\\
+    $E_{111}(110) = 010$
+
+    \part What is the value of $\ConsE((110,101))$? Explain your answer.\\
+    $\{110\}$, because the only $k$ for which $E_k(110) = 101$  is $110$
+
+    \part What is the value of $\ConsE((010,100))$? Explain your answer.\\
+    $\{110, 001\}$, because the set of keys $k$ for which $E_k(010) = 100$  contains $110$ and $001$.
+
+    \part What is the value of $\ConsE((010,100),(100,011))$? Explain your answer.\\
+    $\{001\}$, because the set of keys $k$ for which $E_k(010) = 100$  contains $110$ and $001$, but the only $k$ for which $E_k(100) = 011$ is $011$.
+
+    \part What is the value of $\ConsE((100,110))$? Explain your answer.\\
+    $\{000,101,010\}$, because each of those three keys $k$, $E_k(100) = 110$
+    \end{parts}
+
+  \bigskip
+  \question Let $E \Colon \bits^{256} \times \bits^{256} \rightarrow \bits^{256}$ be the family of permutations defined as follows. For any key $K$ and input $M = M[1]M[2]$ where $|M[1]| = |M[2]|$ and $\|$ denotes concatenation,
+  \[ E_K(M[1]M[2]) = M[1] \oplus 1^{128} \; \| \; M[2]  \oplus 0^{64}1^{64} \;.\]
+
+  \begin{parts}
+    \part Explicitly specify $E^{-1} \Colon \bits^{256}  \times \bits^{256} \rightarrow \bits^{256}$
+
+    $\ E_K^{-1}(C[1]C[2]) = C[1] \oplus 1^{128} \; \| \; C[2]  \oplus 0^{64}1^{64} \;.$
+
+    \part Suppose the key $K$ is $0^{150}10^{55}1^{50}$ and the plaintext is  $0^{250}1^{6}$. What is the value of the ciphertext?
+
+    $1^{128} 0^{64} 1^{58} 0^{6}$
+
+    \part Suppose the key $K$ is $1^{126}01^{129}$ and the ciphertext is $001^{127}0001^{124}$. What is the value of the plaintext?
+
+    $110^{126}10001^{60}0^{60}$
+
+    \part Prove that $E$ is not a secure PRF. The smaller the resource usage and the larger the advantage, the better your attack is. You need to write down all 4 parts of the proof, namely (1) the idea behind your attack, (2) the pseudocode of your attack, (3) the advantage analysis of your attacker, and (4) the attacker's resource usage.
+
+    1.
+
+    The idea behind the attack is that the adversary knows E, and therefore knows that E does not depend on a random key. Therefore, adversary $A$ can guess if a given ciphertext corresponds to a message simply by encrypting the message with $E$. In the attack, the adversary simply feeds the string $0^{256}$ into the oracle and checks whether the resulting string is $1^{128}0^{64}1^{64}$.
+
+    2.
+
+    Adversary $A^g$:\\
+    \begin{itemize}
+      \item[] $y\leftarrow g(0^{256}) $\\
+      \item[] if y = $1^{128}0^{64}1^{64}$\\
+      \begin{itemize}
+        \item[] return 1
+      \end{itemize}
+      else
+      \begin{itemize}
+        \item[] return 0
+      \end{itemize}
+    \end{itemize}
+
+
+  3.
+  First, we calculate the probability of the experiment returning $True$.
+ \begin{align*}
+  pr[Exp_E(A) \Rightarrow True] &= P[Exp_E(A) \Rightarrow T \wedge b = 0] * pr[b=0] + P[Exp_E(A) \Rightarrow T \wedge b = 0] * p[b=1]\\
+   &= P[Exp_E(A) \Rightarrow T \wedge b = 0] * 0.5 + P[Exp_E(A) \Rightarrow T \wedge b = 1] * 0.5\\
+   &= (1-256^{-1}) * 0.5 + 0.5
+\end{align*}
+
+  Then, to get the advantage, we scale and shift the result.
+\begin{align*}
+  Adv_E(A) &= 2 * Pr[Exp_E(A) \Rightarrow True] - 1 \\
+  &= 2 * ((1-256^{-1}) * 0.5 + 0.5) - 1\\
+   &= 1-256^{-1}
+\end{align*}
+
+4. We only make one query to the adversary, which is of a constant size. Then we check one condition, which is also constant. The code size is also finite and constant
+
+\end{parts}
+  \bigskip
+  \question  Let the message space be $\bits^{3}$, and let $\Prob{M=000} = \Prob{M=101} = \Prob{M=110} = \Prob{M=111} = 0.25$.  Let the probability that $M$ takes on a value other than $000, 101, 110,$ and $111$ be zero. Let $E \Colon \bits^{64} \times \bits^3 \rightarrow \bits^3$ be the following block cipher.
+  \[ E_{0^{64}} = E_{0^{63}1} = \ldots = E_{1^{64}} = (011, 110, 000, 100, 010, 001, 111, 101) \;.\]
+  We define an encryption scheme based on $E$ as follows.
+  \medskip
+
+  \centerline{\framebox[6in]{
+  \begin{tabular}{ll}
+    Key generation: &  Return a bitstring uniform randomly drawn from $\bits^{64}$ \\
+    Encryption of $M$ with key $K$: & Return $E_K(M)$ \\
+    Decryption of $C$ with key $K$: & Return $E^{-1}_K(C)$
+  \end{tabular}}}
+
+  \begin{parts}
+    \part What is the ciphertext expansion for this encryption scheme? (Specify your answer in bits.)
+
+    The ciphertext is always the same size as the plaintext (3 bits), so there are 0 bits of ciphertext expansion.
+
+    \part $\Prob{M=010} = ?$ Explain your answer. Be clear and specific.
+
+    The probability that $M=010$ is $0$, because the probability of the message being anything other than $000,101,110$, or $111$ is $0$.
+
+    \part $\Prob{C=011} = ?$  Explain your answer. Be clear and specific.
+
+    $\Prob{C=011} = 0.25$ Because only $M=000$ would result in this ciphertext, and that has a $0.25$ probability of occuring.
+
+    \part $\CondProb{M=000}{C=111} = ?$ Explain your answer. Be clear and specific.
+
+    $\CondProb{M=000}{C=111} = 0$ because $000$ will encrypt to a ciphertext $011$, not $111$.
+
+    \part $\CondProb{M=110}{C=111} = ?$ Explain your answer. Be clear and specific.
+    $\CondProb{M=110}{C=111} = 1$ because by the definition of $E$, $110$ will always encrypt to $111$.
+
+
+    \part Does this encryption scheme provide perfect secrecy? Prove your answer. \\
+
+    For the scheme to provide perfect secrecy, it would need to meet the following definition:
+
+    For any $a,b \in \{0,1\}^n$, it is the case that $\CondProb{M=a}{C=b} = \Prob{M=a}$.
+
+    For contradiction, set $a = 110$ and $b=111$.
+
+    We know that $\CondProb{M=110}{C=111} = 1$
+    and $\Prob{M=110} = 0.25$, so $\CondProb{M=110}{C=111} \neq \Prob{M=110}$
+
+
+
+
+  \end{parts}
+
+  \bigskip
+  \question  Let $n$ be a positive integer, and let the message space be $\bits^{n}$. Let all possible messages in the message space be equally likely, and let the key space be
+  \[ \{ K \;\mid\; K \in \bits^{n} \mbox{, and } K \mbox{ contains an even number of 1s.} \} \]
+  We define an encryption scheme $\SE$ as follows.
+  \medskip
+
+  \centerline{\framebox[6in]{
+  \begin{tabular}{ll}
+    Key generation: &  Return a bitstring uniform randomly drawn from $\bits^{n}$ \\
+    Encryption of $M$ with key $K$: & Return $M \oplus K$ \\
+    Decryption of $C$ with key $K$: & Return $C \oplus K$
+  \end{tabular}}}
+
+  Does $\SE$ provide perfect secrecy? Prove your answer.
+
+  No, $\SE$ does not provide perfect secrecy.
+
+  For $\SE$ to provide perfect secrecy, we would need that for any $a,b \in \{0,1\}^n$, $\CondProb{M=a}{C=b} = \Prob{M=a}$.
+
+  For contradiction, set $a = 0^n$, and $b = 0^{n-1}1$. Because we know that there are no keys $k$ in the keyspace with an odd number of $1$s and we would need $k = 0^{n-1}1$ to obtain that ciphertext, $\CondProb{M=0^n}{C=0^{n-1}} = 0$.
+  However, $0^n$ is in the message space ${0,1}^n$ so $\Prob{M=0^n} = \frac{1}{2^n}$. Therefore, for $a = 0^n$ and $b = 0^{n-1}1$, $\CondProb{M=a}{C=b} \neq \Prob{M=a}$.
+
+\end{questions}
+
+
+\end{document}
